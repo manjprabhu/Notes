@@ -1,0 +1,149 @@
+package com.btk.notes.View;
+
+import android.content.Intent;
+import android.os.Bundle;
+
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.btk.notes.Model.NoteEntity;
+import com.btk.notes.R;
+import com.btk.notes.Utils.Constants;
+import com.btk.notes.ViewModel.NoteViewModel;
+import com.btk.notes.adapters.NotesListAdapter;
+import com.google.android.material.snackbar.Snackbar;
+
+public class MainActivity extends AppCompatActivity implements NotesListAdapter.onItemClickListener {
+
+    private final String TAG = MainActivity.class.getSimpleName();
+
+    private NoteViewModel mNoteViewModel;
+    private RecyclerView mRecyclerView;
+    private NotesListAdapter mAdapter;
+    private ConstraintLayout mConstraintLayout;
+    private NoteEntity mDeletedNote;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        mRecyclerView = findViewById(R.id.rv_notes_list);
+        mConstraintLayout = (ConstraintLayout) findViewById(R.id.id_constraint_layout);
+        mAdapter = new NotesListAdapter(this);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+
+        mNoteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
+        mNoteViewModel.getAllNotes().observe(this, notes -> {
+            Log.v(TAG, "Length:" + notes.size());
+            mRecyclerView.setAdapter(mAdapter);
+            mAdapter.SetData(notes);
+        });
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                mDeletedNote = mAdapter.getItem(viewHolder.getAdapterPosition());
+                mNoteViewModel.deleteNote(mAdapter.getItem(viewHolder.getAdapterPosition()));
+                showUndoSnackbar(viewHolder.getAdapterPosition());
+            }
+        }).attachToRecyclerView(mRecyclerView);
+    }
+
+    public void CreateNewNote(View view) {
+        Intent intent = new Intent();
+        intent.setClass(this,AddNoteActivity.class);
+//        intent.setClass(this, AddCheckListActivity.class);
+//        this.startActivity(intent);
+        this.startActivityForResult(intent, Constants.CREATE_NOTE);
+    }
+
+    public void EditNote(NoteEntity entity) {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.NOTE_TITLE, entity.getTitle());
+        bundle.putString(Constants.NOTE_DESCRIPTION, entity.getDescription());
+        bundle.putString(Constants.MODE, "edit");
+        bundle.putInt(Constants.NOTE_ID, entity.getId());
+        bundle.putInt(Constants.NOTE_COLOR, entity.getBgColor());
+        Log.v(TAG,"saveNote: position:"+entity.getBgColor());
+        intent.putExtras(bundle);
+        intent.setClass(this, AddNoteActivity.class);
+        this.startActivityForResult(intent, Constants.UPDATE_NOTE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.v(TAG, "onActivityResult");
+
+        if (resultCode == RESULT_OK && requestCode == Constants.CREATE_NOTE) {
+            if (data != null && data.getExtras() != null) {
+                Bundle bundle = data.getExtras();
+
+                NoteEntity noteEntity = new NoteEntity(bundle.get(Constants.NOTE_TITLE).toString(), bundle.get(Constants.NOTE_DESCRIPTION).toString(), bundle.getLong(Constants.NOTE_CREATE_DATE), bundle.getInt(Constants.NOTE_COLOR));
+                mNoteViewModel.createNewNote(noteEntity);
+            }
+        } else if (resultCode == RESULT_OK && requestCode == Constants.UPDATE_NOTE) {
+
+            if (data != null && data.getExtras() != null) {
+                Bundle bundle = data.getExtras();
+                NoteEntity noteEntity = new NoteEntity(bundle.get(Constants.NOTE_TITLE).toString(), bundle.get(Constants.NOTE_DESCRIPTION).toString(), bundle.getLong(Constants.NOTE_CREATE_DATE), bundle.getInt(Constants.NOTE_COLOR));
+                noteEntity.setId(bundle.getInt("note_id"));
+                mNoteViewModel.updateNote(noteEntity);
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main_list, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_all_notes:
+                mNoteViewModel.deleteAllNotes();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+    @Override
+    public void onClick(int pos) {
+        NoteEntity noteEntity = mAdapter.getItem(pos);
+        Log.v(TAG, "Title:" + noteEntity.getTitle());
+        Log.v(TAG, "Description:" + noteEntity.getDescription());
+        EditNote(noteEntity);
+    }
+
+    private void showUndoSnackbar(int i) {
+        Snackbar snackbar = Snackbar.make(mConstraintLayout, R.string.delete_note_snackbar, Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.undo_delete, mConstraintLayout -> undoDelete(i));
+        snackbar.show();
+    }
+
+    private void undoDelete(int i) {
+    }
+}
