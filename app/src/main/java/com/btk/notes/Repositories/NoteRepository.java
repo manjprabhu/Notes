@@ -38,7 +38,6 @@ public class NoteRepository {
 
     public void DeleteNote(NoteEntity note) {
         new DeleteSingleNote().execute(note);
-
     }
 
     public void UpdateNote(NoteEntity entity) {

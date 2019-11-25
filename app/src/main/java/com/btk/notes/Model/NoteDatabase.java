@@ -19,7 +19,6 @@ public abstract class NoteDatabase extends RoomDatabase {
             mInstance = Room.databaseBuilder(context,NoteDatabase.class, "note_database").addCallback(callback).build();
         }
         return mInstance;
-
     }
 
     public abstract NoteDao noteDao();
@@ -40,15 +39,12 @@ public abstract class NoteDatabase extends RoomDatabase {
         }*/
     };
 
-
     private static class insertAsyncTask extends AsyncTask<Void, Void,Void> {
 
         private NoteDao noteDao;
-        NoteEntity note;
 
         public insertAsyncTask(NoteDatabase database) {
             noteDao = database.noteDao();
-
         }
 
         @Override

@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -35,7 +36,6 @@ public class AddNoteActivity extends AppCompatActivity {
         mTitle = (EditText)findViewById(R.id.et_title);
         mDescription =(EditText)findViewById(R.id.et_description);
         position = 1;
-
         init();
     }
 
@@ -53,7 +53,7 @@ public class AddNoteActivity extends AppCompatActivity {
                 if(!isEmptyNote())
                     saveNote();
                 else
-                    finish();
+                    Toast.makeText(this, getText(R.string.empty_title),Toast.LENGTH_LONG).show();
                 break;
             case R.id.action_color_picker:
                 showColorPickerDialog();

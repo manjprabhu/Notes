@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData;
 import com.btk.notes.Model.NoteEntity;
 import com.btk.notes.Repositories.NoteRepository;
 
-
 import java.util.List;
 
 public class NoteViewModel extends AndroidViewModel {

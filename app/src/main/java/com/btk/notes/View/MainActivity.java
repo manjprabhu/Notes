@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
                 mNoteViewModel.createNewNote(noteEntity);
             }
         } else if (resultCode == RESULT_OK && requestCode == Constants.UPDATE_NOTE) {
-
             if (data != null && data.getExtras() != null) {
                 Bundle bundle = data.getExtras();
                 NoteEntity noteEntity = new NoteEntity(bundle.get(Constants.NOTE_TITLE).toString(), bundle.get(Constants.NOTE_DESCRIPTION).toString(), bundle.getLong(Constants.NOTE_CREATE_DATE), bundle.getInt(Constants.NOTE_COLOR));
