@@ -14,9 +14,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProviders;
 
+import com.btk.notes.Model.NoteEntity;
 import com.btk.notes.R;
 import com.btk.notes.Utils.Constants;
+import com.btk.notes.ViewModel.NoteViewModel;
 import com.btk.notes.adapters.ColorPickerAdapter;
 
 public class AddNoteActivity extends AppCompatActivity {
@@ -26,16 +29,18 @@ public class AddNoteActivity extends AppCompatActivity {
     private EditText mTitle,mDescription;
     private ConstraintLayout mLayout;
     private int mId,position;
+    private String MODE;
+    private NoteViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_note_layout);
+        viewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
 
         mLayout = (ConstraintLayout)findViewById(R.id.layout_constraint);
         mTitle = (EditText)findViewById(R.id.et_title);
         mDescription =(EditText)findViewById(R.id.et_description);
-        position = 1;
         init();
     }
 
@@ -73,20 +78,33 @@ public class AddNoteActivity extends AppCompatActivity {
             mTitle.setText(bundle.getString(Constants.NOTE_TITLE));
             mDescription.setText(bundle.getString(Constants.NOTE_DESCRIPTION));
             mId = bundle.getInt(Constants.NOTE_ID);
-            mLayout.setBackgroundColor(Constants.getColor(bundle.getInt(Constants.NOTE_COLOR)));
+            MODE = bundle.getString(Constants.MODE);
+
             if("edit".equals(bundle.get(Constants.MODE))) {
                 this.setTitle("Edit Note");
+                position = bundle.getInt(Constants.NOTE_COLOR);
+                mLayout.setBackgroundColor(Constants.getColor(position));
             } else {
+                position =1;
                 this.setTitle("Create Note");
             }
         } else {
+            position =1;
             this.setTitle("Create Note");
         }
     }
 
     private void saveNote() {
         Log.v(TAG,"saveNote: position:"+position);
-        Intent intent = new Intent();
+        NoteEntity entity = new NoteEntity(mTitle.getText().toString(),mDescription.getText().toString(),System.currentTimeMillis(),position);
+        if(("edit").equalsIgnoreCase(MODE)) {
+            entity.setId(mId);
+            viewModel.updateNote(entity);
+        } else {
+            viewModel.createNewNote(entity);
+        }
+
+        /*Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.NOTE_TITLE,mTitle.getText().toString());
         bundle.putString(Constants.NOTE_DESCRIPTION, mDescription.getText().toString());
@@ -94,8 +112,8 @@ public class AddNoteActivity extends AppCompatActivity {
         bundle.putInt(Constants.NOTE_ID,mId);
         bundle.putInt(Constants.NOTE_COLOR,position);
         intent.putExtras(bundle);
-        setResult(RESULT_OK,intent);
-        finish();
+        setResult(RESULT_OK,intent);*/
+        supportFinishAfterTransition();
     }
 
 

@@ -11,7 +11,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +22,7 @@ import com.btk.notes.R;
 import com.btk.notes.Utils.Constants;
 import com.btk.notes.ViewModel.NoteViewModel;
 import com.btk.notes.adapters.NotesListAdapter;
+import com.btk.notes.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity implements NotesListAdapter.onItemClickListener {
@@ -29,26 +30,22 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
     private final String TAG = MainActivity.class.getSimpleName();
 
     private NoteViewModel mNoteViewModel;
-    private RecyclerView mRecyclerView;
     private NotesListAdapter mAdapter;
-    private ConstraintLayout mConstraintLayout;
     private NoteEntity mDeletedNote;
+    private ActivityMainBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mBinding.rvNotesList.setLayoutManager(new LinearLayoutManager(this));
 
-        mRecyclerView = findViewById(R.id.rv_notes_list);
-        mConstraintLayout = (ConstraintLayout) findViewById(R.id.id_constraint_layout);
         mAdapter = new NotesListAdapter(this);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
 
         mNoteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
         mNoteViewModel.getAllNotes().observe(this, notes -> {
             Log.v(TAG, "Length:" + notes.size());
-            mRecyclerView.setAdapter(mAdapter);
+            mBinding.rvNotesList.setAdapter(mAdapter);
             mAdapter.SetData(notes);
         });
 
@@ -64,14 +61,12 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
                 mNoteViewModel.deleteNote(mAdapter.getItem(viewHolder.getAdapterPosition()));
                 showUndoSnackbar(viewHolder.getAdapterPosition());
             }
-        }).attachToRecyclerView(mRecyclerView);
+        }).attachToRecyclerView(mBinding.rvNotesList);
     }
 
     public void CreateNewNote(View view) {
         Intent intent = new Intent();
         intent.setClass(this,AddNoteActivity.class);
-//        intent.setClass(this, AddCheckListActivity.class);
-//        this.startActivity(intent);
         this.startActivityForResult(intent, Constants.CREATE_NOTE);
     }
 
@@ -86,7 +81,8 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
         Log.v(TAG,"saveNote: position:"+entity.getBgColor());
         intent.putExtras(bundle);
         intent.setClass(this, AddNoteActivity.class);
-        this.startActivityForResult(intent, Constants.UPDATE_NOTE);
+        this.startActivity(intent);
+//        this.startActivityForResult(intent, Constants.UPDATE_NOTE);
     }
 
     @Override
@@ -105,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
             if (data != null && data.getExtras() != null) {
                 Bundle bundle = data.getExtras();
                 NoteEntity noteEntity = new NoteEntity(bundle.get(Constants.NOTE_TITLE).toString(), bundle.get(Constants.NOTE_DESCRIPTION).toString(), bundle.getLong(Constants.NOTE_CREATE_DATE), bundle.getInt(Constants.NOTE_COLOR));
-                noteEntity.setId(bundle.getInt("note_id"));
+                noteEntity.setId(bundle.getInt(Constants.NOTE_ID));
                 mNoteViewModel.updateNote(noteEntity);
             }
         }
@@ -138,9 +134,9 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
     }
 
     private void showUndoSnackbar(int i) {
-        Snackbar snackbar = Snackbar.make(mConstraintLayout, R.string.delete_note_snackbar, Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.undo_delete, mConstraintLayout -> undoDelete(i));
-        snackbar.show();
+        Snackbar snackbar = Snackbar.make(mBinding.idConstraintLayout, R.string.delete_note_snackbar, Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.undo_delete, v -> { undoDelete(i);  });
+                snackbar.show();
     }
 
     private void undoDelete(int i) {
