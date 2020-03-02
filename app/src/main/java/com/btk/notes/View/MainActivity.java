@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
         bundle.putString(Constants.MODE, "edit");
         bundle.putInt(Constants.NOTE_ID, entity.getId());
         bundle.putInt(Constants.NOTE_COLOR, entity.getBgColor());
-        Log.v(TAG,"saveNote: position:"+entity.getBgColor());
         intent.putExtras(bundle);
         intent.setClass(this, AddNoteActivity.class);
         this.startActivity(intent);
