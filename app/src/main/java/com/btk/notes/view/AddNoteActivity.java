@@ -1,4 +1,4 @@
-package com.btk.notes.View;
+package com.btk.notes.view;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -8,46 +8,41 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.btk.notes.Model.NoteEntity;
+import com.btk.notes.model.NoteEntity;
 import com.btk.notes.R;
-import com.btk.notes.Utils.Constants;
-import com.btk.notes.ViewModel.NoteViewModel;
+import com.btk.notes.utils.Constants;
+import com.btk.notes.viewmodel.NoteViewModel;
 import com.btk.notes.adapters.ColorPickerAdapter;
+import com.btk.notes.databinding.AddNoteLayoutBinding;
 
 public class AddNoteActivity extends AppCompatActivity {
 
-    private final String TAG  = AddNoteActivity.class.getSimpleName();
+    private final String TAG = AddNoteActivity.class.getSimpleName();
 
-    private EditText mTitle,mDescription;
-    private ConstraintLayout mLayout;
-    private int mId,position;
+    private int mId, position;
     private String MODE;
+    private AddNoteLayoutBinding mBinding;
     private NoteViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_note_layout);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.add_note_layout);
         viewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
-
-        mLayout = (ConstraintLayout)findViewById(R.id.layout_constraint);
-        mTitle = (EditText)findViewById(R.id.et_title);
-        mDescription =(EditText)findViewById(R.id.et_description);
         init();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_create_note,menu);
+        menuInflater.inflate(R.menu.menu_create_note, menu);
         return true;
     }
 
@@ -55,10 +50,10 @@ public class AddNoteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_done:
-                if(!isEmptyNote())
+                if (!isEmptyNote())
                     saveNote();
                 else
-                    Toast.makeText(this, getText(R.string.empty_title),Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getText(R.string.empty_title), Toast.LENGTH_LONG).show();
                 break;
             case R.id.action_color_picker:
                 showColorPickerDialog();
@@ -74,30 +69,30 @@ public class AddNoteActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
-        if(bundle !=null) {
-            mTitle.setText(bundle.getString(Constants.NOTE_TITLE));
-            mDescription.setText(bundle.getString(Constants.NOTE_DESCRIPTION));
+        if (bundle != null) {
+            mBinding.etTitle.setText(bundle.getString(Constants.NOTE_TITLE));
+            mBinding.etDescription.setText(bundle.getString(Constants.NOTE_DESCRIPTION));
             mId = bundle.getInt(Constants.NOTE_ID);
             MODE = bundle.getString(Constants.MODE);
 
-            if("edit".equals(bundle.get(Constants.MODE))) {
+            if ("edit".equals(bundle.get(Constants.MODE))) {
                 this.setTitle("Edit Note");
                 position = bundle.getInt(Constants.NOTE_COLOR);
-                mLayout.setBackgroundColor(Constants.getColor(position));
+                mBinding.layoutConstraint.setBackgroundColor(Constants.getColor(position));
             } else {
-                position =1;
+                position = 1;
                 this.setTitle("Create Note");
             }
         } else {
-            position =1;
+            position = 1;
             this.setTitle("Create Note");
         }
     }
 
     private void saveNote() {
-        Log.v(TAG,"saveNote: position:"+position);
-        NoteEntity entity = new NoteEntity(mTitle.getText().toString(),mDescription.getText().toString(),System.currentTimeMillis(),position);
-        if(("edit").equalsIgnoreCase(MODE)) {
+        Log.v(TAG, "saveNote: position:" + position);
+        NoteEntity entity = new NoteEntity(mBinding.etTitle.getText().toString(), mBinding.etDescription.getText().toString(), System.currentTimeMillis(), position);
+        if (("edit").equalsIgnoreCase(MODE)) {
             entity.setId(mId);
             viewModel.updateNote(entity);
         } else {
@@ -117,8 +112,7 @@ public class AddNoteActivity extends AppCompatActivity {
     }
 
 
-    private void showColorPickerDialog()
-    {
+    private void showColorPickerDialog() {
         GridView gridView = new GridView(this);
         ColorPickerAdapter adapter = new ColorPickerAdapter(this);
         gridView.setAdapter(adapter);
@@ -130,14 +124,14 @@ public class AddNoteActivity extends AppCompatActivity {
         final AlertDialog show = builder.show();
 
         gridView.setOnItemClickListener((parent, view, pos, id) -> {
-            mLayout.setBackgroundColor(Constants.getColor(pos));
-            Log.v(TAG,"saveNote: position:"+pos);
+            mBinding.layoutConstraint.setBackgroundColor(Constants.getColor(pos));
+            Log.v(TAG, "saveNote: position:" + pos);
             position = pos;
             show.dismiss();
         });
     }
 
     private boolean isEmptyNote() {
-        return TextUtils.isEmpty(mTitle.getText().toString()) && TextUtils.isEmpty(mDescription.getText().toString()) ? true  : false;
+        return TextUtils.isEmpty(mBinding.etTitle.getText().toString()) && TextUtils.isEmpty(mBinding.etDescription.getText().toString()) ? true : false;
     }
 }

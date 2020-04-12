@@ -1,4 +1,4 @@
-package com.btk.notes.Reminder;
+package com.btk.notes.reminder;
 
 import android.app.Dialog;
 import android.os.Bundle;

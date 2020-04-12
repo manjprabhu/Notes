@@ -1,4 +1,4 @@
-package com.btk.notes.Model;
+package com.btk.notes.model;
 
 import android.content.Context;
 import android.os.AsyncTask;

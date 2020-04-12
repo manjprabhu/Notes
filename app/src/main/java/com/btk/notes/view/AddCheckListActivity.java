@@ -1,4 +1,4 @@
-package com.btk.notes.View;
+package com.btk.notes.view;
 
 import android.content.Context;
 import android.os.Bundle;

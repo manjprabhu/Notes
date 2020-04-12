@@ -1,11 +1,12 @@
-package com.btk.notes.ViewModel;
+package com.btk.notes.viewmodel;
 
 import android.app.Application;
+
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.btk.notes.Model.NoteEntity;
-import com.btk.notes.Repositories.NoteRepository;
+import com.btk.notes.model.NoteEntity;
+import com.btk.notes.repositories.NoteRepository;
 
 import java.util.List;
 

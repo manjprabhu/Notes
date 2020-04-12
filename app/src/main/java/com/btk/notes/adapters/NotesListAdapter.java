@@ -10,9 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.btk.notes.Model.NoteEntity;
+import com.btk.notes.model.NoteEntity;
 import com.btk.notes.R;
-import com.btk.notes.Utils.Constants;
+import com.btk.notes.utils.Constants;
 
 import java.util.List;
 

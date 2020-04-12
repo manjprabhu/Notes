@@ -1,12 +1,10 @@
-package com.btk.notes.View;
+package com.btk.notes.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,15 +15,16 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.btk.notes.Model.NoteEntity;
+import com.btk.notes.model.NoteEntity;
 import com.btk.notes.R;
-import com.btk.notes.Utils.Constants;
-import com.btk.notes.ViewModel.NoteViewModel;
+import com.btk.notes.utils.Constants;
+import com.btk.notes.viewmodel.NoteViewModel;
 import com.btk.notes.adapters.NotesListAdapter;
 import com.btk.notes.databinding.ActivityMainBinding;
+import com.btk.notes.interfaces.ButtonClickCallback;
 import com.google.android.material.snackbar.Snackbar;
 
-public class MainActivity extends AppCompatActivity implements NotesListAdapter.onItemClickListener {
+public class MainActivity extends AppCompatActivity implements NotesListAdapter.onItemClickListener, ButtonClickCallback {
 
     private final String TAG = MainActivity.class.getSimpleName();
 
@@ -38,8 +37,8 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mBinding.setButtomClickCallback(this);
         mBinding.rvNotesList.setLayoutManager(new LinearLayoutManager(this));
-
         mAdapter = new NotesListAdapter(this);
 
         mNoteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
@@ -64,12 +63,6 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
         }).attachToRecyclerView(mBinding.rvNotesList);
     }
 
-    public void CreateNewNote(View view) {
-        Intent intent = new Intent();
-        intent.setClass(this,AddNoteActivity.class);
-        this.startActivityForResult(intent, Constants.CREATE_NOTE);
-    }
-
     public void EditNote(NoteEntity entity) {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
@@ -81,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
         intent.putExtras(bundle);
         intent.setClass(this, AddNoteActivity.class);
         this.startActivity(intent);
-//        this.startActivityForResult(intent, Constants.UPDATE_NOTE);
     }
 
     @Override
@@ -127,8 +119,7 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
     @Override
     public void onClick(int pos) {
         NoteEntity noteEntity = mAdapter.getItem(pos);
-        Log.v(TAG, "Title:" + noteEntity.getTitle());
-        Log.v(TAG, "Description:" + noteEntity.getDescription());
+        Log.v(TAG, "Title:" + noteEntity.getTitle()+" Description:"+noteEntity.getDescription());
         EditNote(noteEntity);
     }
 
@@ -139,5 +130,12 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
     }
 
     private void undoDelete(int i) {
+    }
+
+    @Override
+    public void createNote() {
+        Intent intent = new Intent();
+        intent.setClass(this,AddNoteActivity.class);
+        startActivity(intent);
     }
 }

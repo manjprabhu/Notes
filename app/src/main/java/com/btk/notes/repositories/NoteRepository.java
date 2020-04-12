@@ -1,13 +1,13 @@
-package com.btk.notes.Repositories;
+package com.btk.notes.repositories;
 
 import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
-import com.btk.notes.Model.NoteDao;
-import com.btk.notes.Model.NoteDatabase;
-import com.btk.notes.Model.NoteEntity;
+import com.btk.notes.model.NoteDao;
+import com.btk.notes.model.NoteDatabase;
+import com.btk.notes.model.NoteEntity;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.btk.notes.Utils;
+package com.btk.notes.utils;
 
 import android.content.res.TypedArray;
 

@@ -3,42 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="buttomClickCallback"
+            type="com.btk.notes.interfaces.ButtonClickCallback" />
+    </data>
+
 <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/id_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".View.MainActivity">
+    tools:context=".view.MainActivity">
 
-<!--    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#004981"
-        android:elevation="8dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/Toolbar"
-        app:titleTextAppearance="@style/ToolbarTitleText"/>-->
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
+   <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_notes_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManager="LinearLayoutManager"
-        tools:context=".View.MainActivity"
+        tools:context=".view.MainActivity"
         app:layout_constraintEnd_toEndOf="parent"
         android:fitsSystemWindows="true"
         app:layout_constraintTop_toTopOf="parent"
@@ -49,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:onClick="CreateNewNote"
+        android:onClick="@{(view) -> buttomClickCallback.createNote()}"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/ic_note_add"/>

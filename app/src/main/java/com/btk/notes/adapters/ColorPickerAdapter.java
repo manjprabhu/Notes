@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.btk.notes.R;
-import com.btk.notes.Utils.Constants;
+import com.btk.notes.utils.Constants;
 
 public class ColorPickerAdapter extends BaseAdapter {
 
