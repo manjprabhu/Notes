@@ -4,37 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="buttomClickCallback"
             type="com.btk.notes.interfaces.ButtonClickCallback" />
     </data>
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/id_constraint_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.MainActivity">
-
-   <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_notes_list"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/id_constraint_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="LinearLayoutManager"
-        tools:context=".view.MainActivity"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:fitsSystemWindows="true"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:layout_height="match_parent"
+        tools:context=".view.MainActivity">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_note"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:onClick="@{(view) -> buttomClickCallback.createNote()}"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/ic_note_add"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_notes_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:layoutManager="LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:context=".view.MainActivity" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/id_nodata_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/nodata_view"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_add_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:onClick="@{(view) -> buttomClickCallback.createNote()}"
+            android:src="@drawable/ic_note_add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

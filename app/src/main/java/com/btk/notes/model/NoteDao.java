@@ -30,4 +30,12 @@ public interface NoteDao {
     @Query("SELECT * FROM note_table ORDER BY create_date DESC")
     LiveData<List<NoteEntity>> getSortedNotes();
 
+    @Query("UPDATE note_table SET isDeleted =:isDeleted WHERE note_id = :noteId")
+    void markAsDeleted(int isDeleted, int noteId);
+
+    @Query("SELECT * FROM note_table WHERE isDeleted = 0 ORDER BY create_date DESC")
+    LiveData<List<NoteEntity>> getNotes();
+
+    @Query("UPDATE note_table SET isDeleted =:isDeleted WHERE note_id = :noteId")
+    void undoDelete(int isDeleted, int noteId);
 }

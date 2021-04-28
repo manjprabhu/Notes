@@ -10,6 +10,7 @@
     <string name="undo_delete">Undo</string>
     <string name="pick_color">Color Picker</string>
     <string name="empty_title">Title can\'t be empty</string>
+    <string name="nodata_view">No Events</string>
 
     <array name="color">
         <item>@color/colorAccent</item>

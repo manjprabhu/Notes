@@ -26,6 +26,25 @@ public class NoteEntity {
     @ColumnInfo(name = "bg_color")
     private int bgColor;
 
+    @ColumnInfo(name = "isDeleted")
+    private int isdeleted;
+
+    public NoteEntity(String title, String description, long createdDate, int bgColor) {
+        this.title = title;
+        this.description = description;
+        this.createdDate = createdDate;
+        this.bgColor = bgColor;
+        this.isdeleted = 0;
+    }
+
+    public int getIsdeleted() {
+        return isdeleted;
+    }
+
+    public void setIsdeleted(int isdeleted) {
+        this.isdeleted = isdeleted;
+    }
+
     public int getBgColor() {
         return bgColor;
     }
@@ -42,26 +61,19 @@ public class NoteEntity {
         return id;
     }
 
-    public NoteEntity(String title, String description, long createdDate, int bgColor) {
-        this.title = title;
-        this.description = description;
-        this.createdDate = createdDate;
-        this.bgColor = bgColor;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getPriority() {
         return priority;
     }
 
-    public long getCreatedDate() {
-        return createdDate;
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public long getCreatedDate() {
+        return createdDate;
     }
 }

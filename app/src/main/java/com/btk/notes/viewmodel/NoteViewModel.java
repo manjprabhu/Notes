@@ -15,14 +15,14 @@ public class NoteViewModel extends AndroidViewModel {
     private LiveData<List<NoteEntity>> mAllNotes;
     private NoteRepository mRepository;
 
-    public LiveData<List<NoteEntity>> getAllNotes() {
-        return mAllNotes;
-    }
-
     public NoteViewModel(Application application) {
         super(application);
         mRepository = new NoteRepository(application);
         mAllNotes = mRepository.getAllNotes();
+    }
+
+    public LiveData<List<NoteEntity>> getAllNotes() {
+        return mAllNotes;
     }
 
     public void createNewNote(NoteEntity entity) {
@@ -40,4 +40,10 @@ public class NoteViewModel extends AndroidViewModel {
     public void deleteNote(NoteEntity note) {
         mRepository.DeleteNote(note);
     }
+
+    public void undoDelete(NoteEntity note) {
+        mRepository.undoDelete(note);
+
+    }
+
 }

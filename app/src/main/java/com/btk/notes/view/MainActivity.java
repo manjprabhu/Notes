@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,14 +16,16 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.btk.notes.model.NoteEntity;
 import com.btk.notes.R;
-import com.btk.notes.utils.Constants;
-import com.btk.notes.viewmodel.NoteViewModel;
 import com.btk.notes.adapters.NotesListAdapter;
 import com.btk.notes.databinding.ActivityMainBinding;
 import com.btk.notes.interfaces.ButtonClickCallback;
+import com.btk.notes.model.NoteEntity;
+import com.btk.notes.utils.Constants;
+import com.btk.notes.viewmodel.NoteViewModel;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NotesListAdapter.onItemClickListener, ButtonClickCallback {
 
@@ -42,11 +45,22 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
         mAdapter = new NotesListAdapter(this);
 
         mNoteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
-        mNoteViewModel.getAllNotes().observe(this, notes -> {
+        mNoteViewModel.getAllNotes().observe(MainActivity.this, this::changeData);
+
+        //Older way of implementation
+       /* mNoteViewModel.getAllNotes().observe(this, new Observer<List<NoteEntity>>() {
+            @Override
+            public void onChanged(List<NoteEntity> noteEntities) {
+
+            }
+        });*/
+
+        //Older way using lamda expression
+       /* mNoteViewModel.getAllNotes().observe(this, notes -> {
             Log.v(TAG, "Length:" + notes.size());
             mBinding.rvNotesList.setAdapter(mAdapter);
             mAdapter.SetData(notes);
-        });
+        });*/
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
@@ -84,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
         if (resultCode == RESULT_OK && requestCode == Constants.CREATE_NOTE) {
             if (data != null && data.getExtras() != null) {
                 Bundle bundle = data.getExtras();
-
                 NoteEntity noteEntity = new NoteEntity(bundle.get(Constants.NOTE_TITLE).toString(), bundle.get(Constants.NOTE_DESCRIPTION).toString(), bundle.getLong(Constants.NOTE_CREATE_DATE), bundle.getInt(Constants.NOTE_COLOR));
                 mNoteViewModel.createNewNote(noteEntity);
             }
@@ -119,23 +132,40 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
     @Override
     public void onClick(int pos) {
         NoteEntity noteEntity = mAdapter.getItem(pos);
-        Log.v(TAG, "Title:" + noteEntity.getTitle()+" Description:"+noteEntity.getDescription());
+        Log.v(TAG, "Title:" + noteEntity.getTitle() + " Description:" + noteEntity.getDescription());
         EditNote(noteEntity);
     }
 
     private void showUndoSnackbar(int i) {
         Snackbar snackbar = Snackbar.make(mBinding.idConstraintLayout, R.string.delete_note_snackbar, Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.undo_delete, v -> { undoDelete(i);  });
-                snackbar.show();
+        snackbar.setAction(R.string.undo_delete, v -> {
+            undoDelete(i);
+        });
+        snackbar.show();
     }
 
     private void undoDelete(int i) {
+
     }
 
     @Override
     public void createNote() {
         Intent intent = new Intent();
-        intent.setClass(this,AddNoteActivity.class);
+        intent.setClass(this, AddNoteActivity.class);
         startActivity(intent);
+    }
+
+    private void changeData(List<NoteEntity> list) {
+        Log.v(TAG, "===>>> changedata:" + list.size());
+        if (list != null && !list.isEmpty()) {
+            mBinding.rvNotesList.setVisibility(View.VISIBLE);
+            mBinding.idNodataView.setVisibility(View.GONE);
+            mBinding.rvNotesList.setAdapter(mAdapter);
+            mAdapter.SetData(list);
+            mBinding.executePendingBindings();
+        } else {
+            mBinding.rvNotesList.setVisibility(View.GONE);
+            mBinding.idNodataView.setVisibility(View.VISIBLE);
+        }
     }
 }

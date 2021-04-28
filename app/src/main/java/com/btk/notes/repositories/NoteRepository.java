@@ -21,7 +21,8 @@ public class NoteRepository {
         NoteDatabase db = NoteDatabase.getInstance(application);
         noteDao = db.noteDao();
 //        mAllNotes = noteDao.getAllNotes();
-        mAllNotes = noteDao.getSortedNotes();
+//        mAllNotes = noteDao.getSortedNotes();
+        mAllNotes = noteDao.getNotes();
     }
 
     public LiveData<List<NoteEntity>> getAllNotes() {
@@ -44,6 +45,11 @@ public class NoteRepository {
         new UpdateNoteTask().execute(entity);
     }
 
+    public void undoDelete(NoteEntity entity) {
+        new undoDeleteTask().execute(entity);
+    }
+
+
     class InsertTask extends AsyncTask<NoteEntity, Void, Void> {
         @Override
         protected Void doInBackground(NoteEntity... noteEntities) {
@@ -63,7 +69,8 @@ public class NoteRepository {
     class DeleteSingleNote extends AsyncTask<NoteEntity, Void, Void> {
         @Override
         protected Void doInBackground(NoteEntity... noteEntities) {
-            noteDao.delete(noteEntities[0]);
+//            noteDao.delete(noteEntities[0]);
+            noteDao.markAsDeleted(1,noteEntities[0].getId());
             return null;
         }
     }
@@ -73,6 +80,14 @@ public class NoteRepository {
         @Override
         protected Void doInBackground(NoteEntity... noteEntities) {
             noteDao.update(noteEntities[0]);
+            return null;
+        }
+    }
+
+    class undoDeleteTask extends AsyncTask<NoteEntity,Void,Void> {
+        @Override
+        protected Void doInBackground(NoteEntity... noteEntities) {
+            noteDao.undoDelete(0,noteEntities[0].getId());
             return null;
         }
     }
