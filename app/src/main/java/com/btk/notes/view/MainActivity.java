@@ -2,7 +2,6 @@ package com.btk.notes.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +21,7 @@ import com.btk.notes.databinding.ActivityMainBinding;
 import com.btk.notes.interfaces.ButtonClickCallback;
 import com.btk.notes.model.NoteEntity;
 import com.btk.notes.utils.Constants;
+import com.btk.notes.utils.LogUtil;
 import com.btk.notes.viewmodel.NoteViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -71,13 +71,13 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 mDeletedNote = mAdapter.getItem(viewHolder.getAdapterPosition());
-                mNoteViewModel.deleteNote(mAdapter.getItem(viewHolder.getAdapterPosition()));
+                mNoteViewModel.deleteNote(mDeletedNote);
                 showUndoSnackbar(viewHolder.getAdapterPosition());
             }
         }).attachToRecyclerView(mBinding.rvNotesList);
     }
 
-    public void EditNote(NoteEntity entity) {
+    private void EditNote(NoteEntity entity) {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.NOTE_TITLE, entity.getTitle());
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.v(TAG, "onActivityResult");
+        LogUtil.LOGV(TAG, "onActivityResult");
 
         if (resultCode == RESULT_OK && requestCode == Constants.CREATE_NOTE) {
             if (data != null && data.getExtras() != null) {
@@ -132,20 +132,19 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
     @Override
     public void onClick(int pos) {
         NoteEntity noteEntity = mAdapter.getItem(pos);
-        Log.v(TAG, "Title:" + noteEntity.getTitle() + " Description:" + noteEntity.getDescription());
+        LogUtil.LOGV(TAG, "Title:" + noteEntity.getTitle() + " Description:" + noteEntity.getDescription());
         EditNote(noteEntity);
     }
 
     private void showUndoSnackbar(int i) {
         Snackbar snackbar = Snackbar.make(mBinding.idConstraintLayout, R.string.delete_note_snackbar, Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.undo_delete, v -> {
-            undoDelete(i);
-        });
+        snackbar.setAction(R.string.undo_delete, v -> undoDelete());
         snackbar.show();
     }
 
-    private void undoDelete(int i) {
-
+    private void undoDelete() {
+        mNoteViewModel.undoDelete(mDeletedNote);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -156,16 +155,16 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
     }
 
     private void changeData(List<NoteEntity> list) {
-        Log.v(TAG, "===>>> changedata:" + list.size());
+        LogUtil.LOGI(TAG,"ChangeData List size:"+list.size());
         if (list != null && !list.isEmpty()) {
             mBinding.rvNotesList.setVisibility(View.VISIBLE);
-            mBinding.idNodataView.setVisibility(View.GONE);
+            mBinding.nodataView.setVisibility(View.GONE);
             mBinding.rvNotesList.setAdapter(mAdapter);
             mAdapter.SetData(list);
             mBinding.executePendingBindings();
         } else {
             mBinding.rvNotesList.setVisibility(View.GONE);
-            mBinding.idNodataView.setVisibility(View.VISIBLE);
+            mBinding.nodataView.setVisibility(View.VISIBLE);
         }
     }
 }

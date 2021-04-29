@@ -43,7 +43,6 @@ public class NoteViewModel extends AndroidViewModel {
 
     public void undoDelete(NoteEntity note) {
         mRepository.undoDelete(note);
-
     }
 
 }

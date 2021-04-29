@@ -34,22 +34,9 @@ public class ColorPickerAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        /*ImageView imageView;
-        if (convertView == null) {
-            imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(150, 150));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(2, 2, 2, 2);
-        } else {
-            imageView = (ImageView) convertView;
-        }
-
-        imageView.setImageResource(mThumbIds[position]);
-        return imageView;*/
-
         View colorView;
         LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(R.layout.color_picker_item,parent,false);
+        View view = layoutInflater.inflate(R.layout.color_picker_item, parent, false);
         colorView = (View) view.findViewById(R.id.color_item);
         colorView.setBackgroundColor(Constants.getColor(position));
         return view;

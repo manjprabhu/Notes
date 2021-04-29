@@ -1,5 +1,6 @@
 package com.btk.notes.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,11 +57,6 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
         return mAllNotes.get(pos);
     }
 
-    public void undoDelete(NoteEntity entity, int pos) {
-        mAllNotes.add(pos, entity);
-        notifyItemInserted(pos);
-    }
-
     public interface onItemClickListener {
         void onClick(int pos);
     }
@@ -71,9 +67,9 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
 
         private NotesListHolder(@NonNull View itemView) {
             super(itemView);
-            mTitle = (TextView) itemView.findViewById(R.id.tv_note_title_name);
-            mDescription = (TextView) itemView.findViewById(R.id.tv_card_description);
-            mCardView = (CardView) itemView.findViewById(R.id.id_card);
+            mTitle = itemView.findViewById(R.id.tv_note_title_name);
+            mDescription = itemView.findViewById(R.id.tv_card_description);
+            mCardView = itemView.findViewById(R.id.id_card);
         }
     }
 }

@@ -27,16 +27,42 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:context=".view.MainActivity" />
 
-        <TextView
-            android:id="@+id/id_nodata_view"
+
+        <LinearLayout
+            android:id="@+id/nodata_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/nodata_view"
+            android:gravity="center"
+            android:orientation="vertical"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_no_data"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_no_data" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:text="@string/nodata_view"
+                android:textSize="25sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:text="@string/no_data_description"
+                android:textSize="20dp" />
+
+        </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_add_note"

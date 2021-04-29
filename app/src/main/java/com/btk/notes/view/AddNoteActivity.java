@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,12 +14,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.btk.notes.model.NoteEntity;
 import com.btk.notes.R;
-import com.btk.notes.utils.Constants;
-import com.btk.notes.viewmodel.NoteViewModel;
 import com.btk.notes.adapters.ColorPickerAdapter;
 import com.btk.notes.databinding.AddNoteLayoutBinding;
+import com.btk.notes.model.NoteEntity;
+import com.btk.notes.utils.Constants;
+import com.btk.notes.utils.LogUtil;
+import com.btk.notes.viewmodel.NoteViewModel;
 
 public class AddNoteActivity extends AppCompatActivity {
 
@@ -66,6 +66,7 @@ public class AddNoteActivity extends AppCompatActivity {
     }
 
     private void init() {
+        LogUtil.LOGV(TAG, "init");
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
@@ -87,10 +88,11 @@ public class AddNoteActivity extends AppCompatActivity {
             position = 1;
             this.setTitle("Create Note");
         }
+        LogUtil.LOGV(TAG, "init mode:" + MODE);
     }
 
     private void saveNote() {
-        Log.v(TAG, "saveNote: position:" + position);
+        LogUtil.LOGV(TAG, "saveNote: position:" + position);
         NoteEntity entity = new NoteEntity(mBinding.etTitle.getText().toString(), mBinding.etDescription.getText().toString(), System.currentTimeMillis(), position);
         if (("edit").equalsIgnoreCase(MODE)) {
             entity.setId(mId);
@@ -98,16 +100,6 @@ public class AddNoteActivity extends AppCompatActivity {
         } else {
             viewModel.createNewNote(entity);
         }
-
-        /*Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.NOTE_TITLE,mTitle.getText().toString());
-        bundle.putString(Constants.NOTE_DESCRIPTION, mDescription.getText().toString());
-        bundle.putLong(Constants.NOTE_CREATE_DATE,System.currentTimeMillis());
-        bundle.putInt(Constants.NOTE_ID,mId);
-        bundle.putInt(Constants.NOTE_COLOR,position);
-        intent.putExtras(bundle);
-        setResult(RESULT_OK,intent);*/
         supportFinishAfterTransition();
     }
 
@@ -125,7 +117,7 @@ public class AddNoteActivity extends AppCompatActivity {
 
         gridView.setOnItemClickListener((parent, view, pos, id) -> {
             mBinding.layoutConstraint.setBackgroundColor(Constants.getColor(pos));
-            Log.v(TAG, "saveNote: position:" + pos);
+            LogUtil.LOGV(TAG, "saveNote: position:" + pos);
             position = pos;
             show.dismiss();
         });

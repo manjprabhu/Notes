@@ -8,11 +8,13 @@ import androidx.lifecycle.LiveData;
 import com.btk.notes.model.NoteDao;
 import com.btk.notes.model.NoteDatabase;
 import com.btk.notes.model.NoteEntity;
+import com.btk.notes.utils.LogUtil;
 
 import java.util.List;
 
 public class NoteRepository {
 
+    private final String TAG = NoteRepository.class.getSimpleName();
     private NoteDao noteDao;
 
     private LiveData<List<NoteEntity>> mAllNotes;
@@ -53,6 +55,7 @@ public class NoteRepository {
     class InsertTask extends AsyncTask<NoteEntity, Void, Void> {
         @Override
         protected Void doInBackground(NoteEntity... noteEntities) {
+            LogUtil.LOGV(TAG, "InsertTask");
             noteDao.insert(noteEntities[0]);
             return null;
         }
@@ -61,6 +64,7 @@ public class NoteRepository {
     class DeleteAllNotesTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
+            LogUtil.LOGV(TAG, "DeleteAllNotesTask");
             noteDao.deleteAllNotes();
             return null;
         }
@@ -70,7 +74,8 @@ public class NoteRepository {
         @Override
         protected Void doInBackground(NoteEntity... noteEntities) {
 //            noteDao.delete(noteEntities[0]);
-            noteDao.markAsDeleted(1,noteEntities[0].getId());
+            LogUtil.LOGV(TAG, "DDeleteSingleNoteTask");
+            noteDao.markAsDeleted(1, noteEntities[0].getId());
             return null;
         }
     }
@@ -79,15 +84,17 @@ public class NoteRepository {
 
         @Override
         protected Void doInBackground(NoteEntity... noteEntities) {
+            LogUtil.LOGV(TAG, "UpdateNoteTask");
             noteDao.update(noteEntities[0]);
             return null;
         }
     }
 
-    class undoDeleteTask extends AsyncTask<NoteEntity,Void,Void> {
+    class undoDeleteTask extends AsyncTask<NoteEntity, Void, Void> {
         @Override
         protected Void doInBackground(NoteEntity... noteEntities) {
-            noteDao.undoDelete(0,noteEntities[0].getId());
+            LogUtil.LOGV(TAG, "undoDeleteTask");
+            noteDao.undoDelete(0, noteEntities[0].getId());
             return null;
         }
     }
