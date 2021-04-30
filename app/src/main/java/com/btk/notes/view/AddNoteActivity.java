@@ -19,7 +19,7 @@ import com.btk.notes.adapters.ColorPickerAdapter;
 import com.btk.notes.databinding.AddNoteLayoutBinding;
 import com.btk.notes.model.NoteEntity;
 import com.btk.notes.utils.Constants;
-import com.btk.notes.utils.LogUtil;
+import com.btk.notes.utils.LogUtils;
 import com.btk.notes.viewmodel.NoteViewModel;
 
 public class AddNoteActivity extends AppCompatActivity {
@@ -66,7 +66,7 @@ public class AddNoteActivity extends AppCompatActivity {
     }
 
     private void init() {
-        LogUtil.LOGV(TAG, "init");
+        LogUtils.LOGV(TAG, "init");
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
@@ -88,11 +88,11 @@ public class AddNoteActivity extends AppCompatActivity {
             position = 1;
             this.setTitle("Create Note");
         }
-        LogUtil.LOGV(TAG, "init mode:" + MODE);
+        LogUtils.LOGV(TAG, "init mode:" + MODE);
     }
 
     private void saveNote() {
-        LogUtil.LOGV(TAG, "saveNote: position:" + position);
+        LogUtils.LOGV(TAG, "saveNote: position:" + position);
         NoteEntity entity = new NoteEntity(mBinding.etTitle.getText().toString(), mBinding.etDescription.getText().toString(), System.currentTimeMillis(), position);
         if (("edit").equalsIgnoreCase(MODE)) {
             entity.setId(mId);
@@ -117,13 +117,13 @@ public class AddNoteActivity extends AppCompatActivity {
 
         gridView.setOnItemClickListener((parent, view, pos, id) -> {
             mBinding.layoutConstraint.setBackgroundColor(Constants.getColor(pos));
-            LogUtil.LOGV(TAG, "saveNote: position:" + pos);
+            LogUtils.LOGV(TAG, "saveNote: position:" + pos);
             position = pos;
             show.dismiss();
         });
     }
 
     private boolean isEmptyNote() {
-        return TextUtils.isEmpty(mBinding.etTitle.getText().toString()) && TextUtils.isEmpty(mBinding.etDescription.getText().toString()) ? true : false;
+        return TextUtils.isEmpty(mBinding.etTitle.getText().toString()) && TextUtils.isEmpty(mBinding.etDescription.getText().toString());
     }
 }

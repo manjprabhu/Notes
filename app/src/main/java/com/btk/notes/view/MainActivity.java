@@ -21,7 +21,7 @@ import com.btk.notes.databinding.ActivityMainBinding;
 import com.btk.notes.interfaces.ButtonClickCallback;
 import com.btk.notes.model.NoteEntity;
 import com.btk.notes.utils.Constants;
-import com.btk.notes.utils.LogUtil;
+import com.btk.notes.utils.LogUtils;
 import com.btk.notes.viewmodel.NoteViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        LogUtil.LOGV(TAG, "onActivityResult");
+        LogUtils.LOGV(TAG, "onActivityResult");
 
         if (resultCode == RESULT_OK && requestCode == Constants.CREATE_NOTE) {
             if (data != null && data.getExtras() != null) {
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
     @Override
     public void onClick(int pos) {
         NoteEntity noteEntity = mAdapter.getItem(pos);
-        LogUtil.LOGV(TAG, "Title:" + noteEntity.getTitle() + " Description:" + noteEntity.getDescription());
+        LogUtils.LOGV(TAG, "Title:" + noteEntity.getTitle() + " Description:" + noteEntity.getDescription());
         EditNote(noteEntity);
     }
 
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements NotesListAdapter.
     }
 
     private void changeData(List<NoteEntity> list) {
-        LogUtil.LOGI(TAG,"ChangeData List size:"+list.size());
+        LogUtils.LOGI(TAG,"ChangeData List size:"+list.size());
         if (list != null && !list.isEmpty()) {
             mBinding.rvNotesList.setVisibility(View.VISIBLE);
             mBinding.nodataView.setVisibility(View.GONE);

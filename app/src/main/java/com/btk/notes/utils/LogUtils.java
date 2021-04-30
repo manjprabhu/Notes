@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.btk.notes.BuildConfig;
 
-public class LogUtil {
+public class LogUtils {
 
     public static void LOGV(final String tag, String msg) {
         if (BuildConfig.DEBUG) {
