@@ -12,6 +12,8 @@ import com.btk.notes.utils.LogUtils;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+
 public class NoteRepository {
 
     private final String TAG = NoteRepository.class.getSimpleName();
@@ -24,11 +26,11 @@ public class NoteRepository {
         noteDao = db.noteDao();
 //        mAllNotes = noteDao.getAllNotes();
 //        mAllNotes = noteDao.getSortedNotes();
-        mAllNotes = noteDao.getNotes();
+//        mAllNotes = noteDao.getNotes();
     }
 
-    public LiveData<List<NoteEntity>> getAllNotes() {
-        return mAllNotes;
+    public Flowable<List<NoteEntity>> getAllNotes() {
+        return noteDao.getAllNotes();
     }
 
     public void CreateNewNote(NoteEntity entity) {

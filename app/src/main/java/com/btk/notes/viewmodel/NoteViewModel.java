@@ -10,19 +10,21 @@ import com.btk.notes.repositories.NoteRepository;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+
 public class NoteViewModel extends AndroidViewModel {
 
-    private LiveData<List<NoteEntity>> mAllNotes;
+    private Flowable<List<NoteEntity>> mAllNotes;
     private NoteRepository mRepository;
 
     public NoteViewModel(Application application) {
         super(application);
         mRepository = new NoteRepository(application);
-        mAllNotes = mRepository.getAllNotes();
+//        mAllNotes = mRepository.getAllNotes();
     }
 
-    public LiveData<List<NoteEntity>> getAllNotes() {
-        return mAllNotes;
+    public Flowable<List<NoteEntity>> getAllNotes() {
+        return mRepository.getAllNotes();
     }
 
     public void createNewNote(NoteEntity entity) {

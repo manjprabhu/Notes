@@ -9,6 +9,8 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+
 @Dao
 public interface NoteDao {
 
@@ -21,8 +23,12 @@ public interface NoteDao {
     @Insert
     void insert(NoteEntity note);
 
+//    @Query("SELECT * FROM note_table")
+//    LiveData<List<NoteEntity>> getAllNotes();
+
     @Query("SELECT * FROM note_table")
-    LiveData<List<NoteEntity>> getAllNotes();
+    Flowable<List<NoteEntity>> getAllNotes();
+
 
     @Query("DELETE FROM note_table")
     void deleteAllNotes();
@@ -38,4 +44,5 @@ public interface NoteDao {
 
     @Query("UPDATE note_table SET isDeleted =:isDeleted WHERE note_id = :noteId")
     void undoDelete(int isDeleted, int noteId);
+
 }
